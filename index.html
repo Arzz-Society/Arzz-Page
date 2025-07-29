@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arzz Society - Inicio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="logo">Arzz Society</div>
+
+      <nav class="main-nav">
+        <div class="contenedor-barra-busqueda">
+          <label for="busqueda" class="sr-only">Buscar:</label>
+          <input
+            type="search"
+            name="busqueda"
+            id="busqueda"
+            class="barra-busqueda"
+          />
+        </div>
+
+        <button id="btn.inicio" class="nav-btn">
+          <i data-lucide="home"></i>Inicio
+        </button>
+
+        <button id="btn.chat" class="nav-btn">
+          <i data-lucide="inbox"></i>Bandeja
+        </button>
+
+        <button id="btn.tienda" class="nav-btn">
+          <i data-lucide="store"></i>Tienda
+        </button>
+
+        <button id="btn.notificacion" class="nav-btn">
+          <i data-lucide="bell"></i>Notificaciones
+        </button>
+
+        <button id="btn.Servicios" class="nav-btn">
+          <i data-lucide="monitor"></i>Servicios
+        </button>
+
+        <button id="btn.cuenta" class="nav-btn">
+          <i data-lucide="user"></i>Cuenta
+        </button>
+      </nav>
+    </header>
+
+    <section class="hero" id="inicio">
+      <div class="seccion-inicio">
+        <h1>ARZZ SOCIETY</h1>
+        <p>
+          Creamos experiencias digitales extraordinarias. Desarrollo web,
+          aplicaciones móviles y videojuegos que impulsan tu negocio hacia el
+          futuro.
+        </p>
+        <a href="#contacto" class="cta-btn">Comenzar Proyecto</a>
+      </div>
+    </section>
+
+    <section class="servicios" id="servicios">
+      <div class="container">
+        <h2 class="titulo-servicios fade-in">Nuestros Servicios</h2>
+        <div class="servicios-grid">
+          <div class="card-servicios fade-in">
+            <div class="servicios-icono">🌐</div>
+            <h3>Desarrollo Web</h3>
+            <p>
+              Sitios web modernos, responsivos y optimizados para SEO. Desde
+              landing pages hasta aplicaciones web complejas.
+            </p>
+          </div>
+          <div class="card-servicios fade-in">
+            <div class="servicios-icono">📱</div>
+            <h3>Aplicaciones Moviles</h3>
+            <p>
+              Apps nativas e híbridas para iOS y Android. Experiencias móviles
+              intuitivas y de alto rendimiento.
+            </p>
+          </div>
+          <div class="card-servicios fade-in">
+            <div class="servicios-icono">🎮</div>
+            <h3>Videojuegos</h3>
+            <p>
+              Desarrollo de videojuegos para múltiples plataformas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © 2025 ARZZ SOCIETY. Todos los derechos reservados.
+    </footer>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>

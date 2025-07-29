@@ -1,0 +1,199 @@
+/*=====================================================
+  * FONTS
+=======================================================*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+#boxMessage {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 500px;
+  padding: 15px;
+  z-index: 2;
+  border-radius: 5px;
+}
+
+.message {
+  display: none;
+}
+
+.messageOpen {
+  display: block !important;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  padding-top: 80px;
+
+  .logo {
+    position: absolute;
+    top: -50px;
+    border-radius: 100%;
+    border: solid 4px rgb(45, 48, 53);
+    left: 40%;
+  }
+
+  h1 {
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+  }
+
+  h3 {
+    color: #c0b49a;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.login-container {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background-image: linear-gradient(
+    to right,
+    rgb(87, 79, 79) 0%,
+    rgb(37, 37, 36) 50%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row {
+  position: relative;
+  width: 400px;
+  border-radius: 20px;
+  padding: 20px;
+  z-index: 1;
+}
+
+.row::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgb(26, 25, 25);
+  border-radius: 20px;
+  box-shadow: 0 0 15px #6b6b6b;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.logo {
+  width: 75px;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(2, 2, 2, 0.5);
+}
+
+.text {
+  text-align: center;
+  color: #e7b11c;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 18px 0;
+
+  /*Hijos*/
+
+  .label {
+    color: rgb(134, 141, 146);
+    margin-bottom: 10px;
+  }
+
+  .input-item {
+    height: 40px;
+    background-color: #352f20;
+    color: #fff;
+    outline: none;
+    border: none;
+    border-bottom: SOLID 2px #665e49;
+    border-radius: 5px;
+    padding-left: 15px;
+  }
+}
+
+.label {
+  font-style: italic;
+  margin-bottom: 10px;
+  color: #c4c4c4;
+  text-align: left;
+}
+
+.input-item:hover {
+  background-color: #38352f;
+}
+
+.login-items {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+  margin: 0px;
+}
+
+.login-items span {
+  margin: 0 5px;
+}
+
+.login-btn {
+  font-size: 1em;
+  background-color: #daa520;
+  width: 100%;
+  height: 2.5rem;
+  border: none;
+  border-radius: 10px;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #9c740e;
+  color: #000;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.link-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  width: 100%;
+}
+
+.link-text {
+  text-align: center;
+  font-size: 1em;
+  text-decoration: none;
+  color: #c4c4c4;
+  transition: color 0.3s ease;
+  margin: 0.5rem 0;
+}
+
+.link-text:hover {
+  color: #daa520;
+}

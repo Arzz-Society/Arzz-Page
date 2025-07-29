@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Tienda</title>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="logo">TIENDA</div>
+
+      <nav class="main-nav">
+        <div class="contenedor-barra-busqueda">
+          <label for="busqueda" class="sr-only">Buscar:</label>
+          <input
+            type="search"
+            name="busqueda"
+            id="busqueda"
+            class="barra-busqueda"
+          />
+        </div>
+
+        <button id="btn.inicio" class="nav-btn">
+          <i data-lucide="home"></i>Inicio
+        </button>
+
+        <button id="btn.chat" class="nav-btn">
+          <i data-lucide="inbox"></i>Bandeja
+        </button>
+
+        <button id="btn.tienda" class="nav-btn">
+          <i data-lucide="store"></i>Tienda
+        </button>
+
+        <button id="btn.notificacion" class="nav-btn">
+          <i data-lucide="bell"></i>Notificaciones
+        </button>
+
+        <button id="btn.Servicios" class="nav-btn">
+          <i data-lucide="monitor"></i>Servicios
+        </button>
+
+        <button id="btn.carrito" class="nav-btn">
+          <i data-lucide="shopping-cart"></i>Carrito
+        </button>
+      </nav>
+    </header>
+
+    <div class="store-container">
+      <section class="compras">
+        <div class="cards-container">
+          <h2>Elija el servicio que desea adquirir.</h2>
+          <div class="card1">
+            <article class="item-article">
+              <h4>Pagina Web</h4>
+              <img
+                src="../img/card-web-temporal.jpg"
+                alt="pagina_web_responsive"
+              />
+              <p>
+                En Arzz Society, transformamos su visión en una plataforma web
+                estratégica, optimizada para impulsar su crecimiento y
+                posicionarlo como líder. Invierta en una solución robusta y
+                escalable que no solo atrae, sino que convierte, asegurando que
+                su negocio brille y prospere en el competitivo mundo digital.
+              </p>
+              <span> Precio: 1000$ </span>
+            </article>
+          </div>
+          <div class="card2">
+            <article class="item-article">
+              <h4>Aplicacion de Escritorio</h4>
+              <img
+                src="../img/card-desktop-app.png"
+                alt="aplicacion-de-escritorio"
+              />
+              <p>
+                Aplicaciones de Escritorio a la Medida. En Arzz Society,
+                diseñamos y desarrollamos potentes aplicaciones de escritorio
+                que optimizan sus operaciones y elevan la productividad. Desde
+                herramientas de gestión personalizadas, creamos soluciones
+                intuitivas y seguras, perfectamente adaptadas a sus necesidades
+                específicas, ¡Transforme su flujo de trabajo con tecnología de
+                vanguardia!
+              </p>
+              <span> Precio: 1000$ </span>
+            </article>
+          </div>
+          <div class="card3">
+            <article>
+              <h4>Aplicacion Mobile</h4>
+              <img src="../img/card-mobile-app.png" alt="aplicacion-mobile" />
+              <p>
+                Aplicaciones Móviles Innovadoras. En Arzz Society, desarrollamos
+                aplicaciones móviles atractivas y funcionales para plataformas
+                iOS y Android. Conecte con sus clientes en Venezuela de manera
+                directa y eficiente, ofreciéndoles experiencias móviles únicas
+                que impulsan su marca y facilitan sus servicios. ¡Lleve su
+                negocio al bolsillo de sus usuarios!
+              </p>
+              <span> Precio: 1000$ </span>
+            </article>
+          </div>
+          <div class="card4">
+            <article>
+              <h4>Videojuego</h4>
+              <img src="../img/card-videogames.png" alt="Videojuegos" />
+              <p>
+                En Arzz Society, transformamos sus ideas en experiencias de
+                juego cautivadoras. Desarrollamos videojuegos innovadores y de
+                alta calidad para diversas plataformas, ofreciendo
+                entretenimiento inmersivo y soluciones a medida para el mercado
+                internacional. ¡Dé vida a sus mundos virtuales con nosotros!
+              </p>
+              <span> Precio: 1000$ </span>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

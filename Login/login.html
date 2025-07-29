@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicia Sesion</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="message" id="boxMessage">
+        <span id="mensaje">Alerta</span>
+      </div>
+      <div class="row">
+        <form class="form" action="" method="post">
+          <div>
+            <div class="header">
+              <img class="logo" src="../img/usuario.png" alt="User" />
+              <h1>BIENVENIDO</h1>
+              <h3>¡Inicia sesion o registrate!</h3>
+            </div>
+            <div class="form-group">
+              <label class="label" for="username">Usuario *</label>
+              <input
+                type="email"
+                id="username"
+                class="input-item"
+                name="username"
+                placeholder="Nombre de Usuario / email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="label" for="password">Contraseña *</label>
+              <input
+                type="password"
+                id="password"
+                class="input-item"
+                name="password"
+                placeholder="Contraseña"
+                required
+              />
+            </div>
+            <div class="login-items">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  name="remember-me"
+                  id="remember-me"
+                  placeholder="Recuerdame"
+                />
+                <span class="label">Recuerdame</span>
+              </div>
+              <div class="link-container">
+                <button type="submit" id="login-btn" class="login-btn">
+                  Iniciar
+                </button>
+                <a class="link-text" href="forgott-password"
+                  >¿Olvidaste tu contraseña?</a
+                >
+                <a class="link-text" href="../Register/register.html"
+                  >¿No tienes cuenta? Registrate</a
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="login.js"></script>
+  </body>
+</html>

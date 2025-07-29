@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Registrate</title>
+  </head>
+  <body>
+    <div class="register-container">
+      <div class="row">
+        <form class="form" action="" method="">
+          <h1>Registrate</h1>
+          <div class="form-group">
+            <label for="username">Usuario *</label>
+            <input
+              class="form-item"
+              type="text"
+              name="username"
+              id="username"
+              aria-placeholder="Ingresa tu suario"
+              placeholder="Ingresa un usuario"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Contraseña *</label>
+            <input
+              class="form-item"
+              type="password"
+              name="password"
+              id="password"
+              aria-placeholder="Ingresa una contraseña"
+              placeholder="Ingresa una contraseña"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Repite tu contraseña *</label>
+            <input
+              class="form-item"
+              type="password"
+              name="password"
+              id="password2"
+              aria-placeholder="Ingresa una contraseña"
+              placeholder="Ingresa una contraseña"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo electronico *</label>
+            <input
+              class="form-item"
+              type="email"
+              name="email"
+              id="email"
+              aria-placeholder="correo electronico"
+              placeholder="ejemplo@gmail.com"
+              required
+            />
+          </div>
+
+          <div class="btn-submit">
+            <button class="form-item" type="submit" id="submit-btn">
+              Registrarse
+            </button>
+          </div>
+
+          <div class="form-item2">
+            <h3>O registrate usando</h3>
+            <button class="register-btn" type="button">
+              <img src="../img/icons8-logo-de-google-96.png" alt="google" />
+              <span class="text">Google</span>
+            </button>
+            <button class="register-btn" type="button">
+              <img src="../img/facebook.png" alt="facebook" />
+              <span class="text">Facebook</span>
+            </button>
+            <button class="register-btn" type="button">
+              <img src="../img/gorjeo.png" alt="google" />
+              <span class="text">X / Twitter</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="register.js"></script>
+  </body>
+</html>
