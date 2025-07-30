@@ -11,8 +11,8 @@
     <header class="header-container">
       <div class="logo">TIENDA</div>
 
-      <nav class="main-nav">
-        <div class="contenedor-barra-busqueda">
+      <div class="contenedor-barra-busqueda">
+        <nav class="main-nav">
           <label for="busqueda" class="sr-only">Buscar:</label>
           <input
             type="search"
@@ -20,46 +20,47 @@
             id="busqueda"
             class="barra-busqueda"
           />
-        </div>
+        </nav>
+      </div>
 
-        <button id="btn.inicio" class="nav-btn">
+        <button type="button" id="btn-inicio" class="nav-btn">
           <i data-lucide="home"></i>Inicio
         </button>
 
-        <button id="btn.chat" class="nav-btn">
+        <button type="button" id="btn-chat" class="nav-btn">
           <i data-lucide="inbox"></i>Bandeja
         </button>
 
-        <button id="btn.tienda" class="nav-btn">
+        <button type="button" id="btn-tienda" class="nav-btn">
           <i data-lucide="store"></i>Tienda
         </button>
 
-        <button id="btn.notificacion" class="nav-btn">
+        <button type="button" id="btn-notificacion" class="nav-btn">
           <i data-lucide="bell"></i>Notificaciones
         </button>
 
-        <button id="btn.Servicios" class="nav-btn">
+        <button type="button" id="btn-Servicios" class="nav-btn">
           <i data-lucide="monitor"></i>Servicios
         </button>
 
-        <button id="btn.carrito" class="nav-btn">
+        <button type="button" id="btn-carrito" class="nav-btn">
           <i data-lucide="shopping-cart"></i>Carrito
         </button>
-      </nav>
     </header>
 
+
+    <!-- Store -->
     <div class="store-container">
-      <section class="compras">
+      <h2>Elija el servicio que desea adquirir.</h2>
         <div class="cards-container">
-          <h2>Elija el servicio que desea adquirir.</h2>
-          <div class="card1">
+          <div class="card">
             <article class="item-article">
-              <h4>Pagina Web</h4>
+              <h4 class="product-title">Pagina Web</h4>
               <img
                 src="../img/card-web-temporal.jpg"
                 alt="pagina_web_responsive"
               />
-              <p>
+              <p class="description">
                 En Arzz Society, transformamos su visión en una plataforma web
                 estratégica, optimizada para impulsar su crecimiento y
                 posicionarlo como líder. Invierta en una solución robusta y
@@ -67,60 +68,112 @@
                 su negocio brille y prospere en el competitivo mundo digital.
               </p>
               <span> Precio: 1000$ </span>
+              <button class="button" type="button">AGREGAR AL CARRITO</button>
             </article>
           </div>
-          <div class="card2">
+          <div class="card">
             <article class="item-article">
-              <h4>Aplicacion de Escritorio</h4>
+              <h4 class="product-title">Aplicacion de Escritorio</h4>
               <img
                 src="../img/card-desktop-app.png"
                 alt="aplicacion-de-escritorio"
               />
-              <p>
+              <p class="description">
                 Aplicaciones de Escritorio a la Medida. En Arzz Society,
                 diseñamos y desarrollamos potentes aplicaciones de escritorio
                 que optimizan sus operaciones y elevan la productividad. Desde
                 herramientas de gestión personalizadas, creamos soluciones
                 intuitivas y seguras, perfectamente adaptadas a sus necesidades
-                específicas, ¡Transforme su flujo de trabajo con tecnología de
-                vanguardia!
+                específicas.
               </p>
-              <span> Precio: 1000$ </span>
+              <span> $1000 </span>
+              <button class="button" type="button">AGREGAR AL CARRITO</button>
             </article>
           </div>
-          <div class="card3">
-            <article>
-              <h4>Aplicacion Mobile</h4>
+          <div class="card">
+            <article class="item-article">
+              <h4 class="product-title">Aplicacion Mobile</h4>
               <img src="../img/card-mobile-app.png" alt="aplicacion-mobile" />
-              <p>
+              <p class="description">
                 Aplicaciones Móviles Innovadoras. En Arzz Society, desarrollamos
                 aplicaciones móviles atractivas y funcionales para plataformas
-                iOS y Android. Conecte con sus clientes en Venezuela de manera
+                iOS y Android. Conecte con sus clientes de manera
                 directa y eficiente, ofreciéndoles experiencias móviles únicas
                 que impulsan su marca y facilitan sus servicios. ¡Lleve su
                 negocio al bolsillo de sus usuarios!
               </p>
-              <span> Precio: 1000$ </span>
+              <span> $1000 </span>
+              <button class="button" type="button">AGREGAR AL CARRITO</button>
             </article>
           </div>
-          <div class="card4">
-            <article>
-              <h4>Videojuego</h4>
+          <div class="card">
+            <article class="item-article">
+              <h4 class="product-title">Videojuego</h4>
               <img src="../img/card-videogames.png" alt="Videojuegos" />
-              <p>
+              <p class="description">
                 En Arzz Society, transformamos sus ideas en experiencias de
                 juego cautivadoras. Desarrollamos videojuegos innovadores y de
                 alta calidad para diversas plataformas, ofreciendo
                 entretenimiento inmersivo y soluciones a medida para el mercado
                 internacional. ¡Dé vida a sus mundos virtuales con nosotros!
               </p>
-              <span> Precio: 1000$ </span>
+              <span> $1000 </span>
+              <button class="button" type="button">AGREGAR AL CARRITO</button>
             </article>
           </div>
         </div>
-      </section>
     </div>
 
-    <script src="script.js"></script>
+        <!-- Footer section -->
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-section company-info">
+          <img src="/img/arzz-logo-temporal.png" alt="Arzz Society Logo" class="footer-logo">
+            <p>Transformamos tus ideas en experiencias digitales inolvidables: web, apps y videojuegos.</p>
+            <div class="social-icon">
+              <a href="" target="_blank" rel="noopener noreferrer"><ion-icon name="logo-facebook" aria-label="Facebook"></ion-icon><i data-lucide="facebook"></i></a>
+              <a href="" target="_blank" rel="noopener noreferrer"><ion-icon name="logo-instagram" aria-label="Instagram"></ion-icon><i data-lucide="instagram"></i></a>
+              <a href="" target="_blank" rel="noopener noreferrer"><ion-icon name="logo-twitter" aria-label="Twitter"></ion-icon><i data-lucide="twitter"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section services-links">
+          <h3>Nuestros Servicios</h3>
+          <ul>
+              <li><a href="">Desarrollo Web</a></li>
+              <li><a href="">Aplicaciones Móviles</a></li>
+              <li><a href="">Aplicaciones de Escritorio</a></li>
+              <li><a href="">Desarrollo de Videojuegos</a></li>
+              <li><a href="">Portafolio</a></li>
+          </ul>
+      </div>
+
+      <div class="footer-section help-contact">
+        <h3>Ayuda y Contacto</h3>
+        <ul>
+            <li><a href="">Contáctanos</a></li>
+            <li><a href="">Preguntas Frecuentes</a></li>
+            <li><a href="mailto:">info@arzzsociety.com</a></li>
+            <li><a href="tel:+584128469599">+58 412 846 9599</a></li>
+        </ul>
+    </div>
+
+    <div class="footer-section legal-links">
+      <h3>Legal</h3>
+      <ul>
+          <li><a href="">Política de Privacidad</a></li>
+          <li><a href="">Términos de Servicio</a></li>
+          <li><a href="">Política de Cookies</a></li>
+          <li><a href="">Mapa del Sitio</a></li>
+      </ul>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 Arzz Society. Todos los derechos reservados.</p>
+    <p>Desarrollado con pasion y esfuerzo.</p>
+</div>
+    </footer>
+
+    <script src="../Inicio/renderer.js"></script>
   </body>
 </html>

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       hideMessage("Correcto: Datos Ingresados Correctamente.", "#6BFF6B");
       setTimeout(() => {
-        window.location.href = "../index.html";
+        window.location.href = "../Inicio/index.html";
       }, 1000);
     }
   });
