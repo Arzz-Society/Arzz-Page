@@ -22,6 +22,32 @@ html {
   color: #eeeeee;
 }
 
+/* scrollbar */
+html::-webkit-scrollbar {
+  width: 15px;
+  height: 15px;
+}
+
+/* Pista del scrollbar */
+html::-webkit-scrollbar-track {
+  background: #333;
+  border-radius: 10px;
+}
+
+/* Pulgar del scrollbar */
+html::-webkit-scrollbar-thumb {
+  background: #e2c000;
+  border-radius: 10px;
+  border: 1px solid #b85919;
+  transition: 0.5s ease;
+}
+
+/* Cambiar color del pulgar al pasar el ratón */
+html::-webkit-scrollbar-thumb:hover {
+  background: #daa520;
+  cursor: pointer;
+}
+
 /* HEADER */
 
 .header-container {
