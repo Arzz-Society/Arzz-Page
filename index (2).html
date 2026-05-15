@@ -1,0 +1,2871 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="ARZZ SOCIETY — Soluciones tecnológicas de vanguardia: videojuegos, apps con IA y software a medida.">
+    <title>ARZZ SOCIETY</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --deep: #0a0000;
+            --crimson: #990000;
+            --gold: #D4AF37;
+            --gold-light: #e8c84a;
+            --gold-dark: #a8891f;
+            --silver: #c0c0c0;
+            --text: #f0e6c8;
+            --text-dim: #9a8a6a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--text);
+            font-family: 'Raleway', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #neural-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center top, rgba(153, 0, 0, 0.08) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* PAGE SYSTEM */
+        .page {
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 3rem;
+            background: rgba(0, 0, 0, 0.92);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 4px;
+        }
+
+        .nav-logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: color .3s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform .3s;
+            transform-origin: left;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-btn {
+            padding: .55rem 1.4rem;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all .3s;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+        }
+
+        .nav-btn:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* GOLD DIVIDER */
+        .gold-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+            margin: 0;
+        }
+
+        /* SECTION BASE */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .sec-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 7rem 2rem;
+        }
+
+        .sec-label {
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sec-label::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .sec-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .sec-title span {
+            color: var(--gold);
+        }
+
+        .sec-body {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.9;
+            max-width: 580px;
+        }
+
+        /* REVEAL ANIMATIONS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity .8s ease, transform .8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity .8s ease, transform .8s ease;
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity .8s ease, transform .8s ease;
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* HERO */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            letter-spacing: 6px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp .8s .2s ease forwards;
+        }
+
+        .hero-logo {
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeUp .8s .3s ease forwards;
+        }
+
+        .hero-logo img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.1), 0 0 80px rgba(153, 0, 0, 0.15);
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            letter-spacing: 6px;
+            line-height: 1;
+            color: var(--text);
+            opacity: 0;
+            animation: fadeUp .8s .4s ease forwards;
+        }
+
+        .hero-title .gold {
+            color: var(--gold);
+        }
+
+        .hero-tagline {
+            margin-top: 1.5rem;
+            font-family: 'Cinzel', serif;
+            font-size: .75rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeUp .8s .5s ease forwards;
+        }
+
+        .hero-rule {
+            width: 80px;
+            height: 1px;
+            background: var(--gold);
+            margin: 2rem auto;
+            opacity: 0;
+            animation: fadeUp .8s .6s ease forwards;
+        }
+
+        .hero-sub {
+            font-size: .95rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp .8s .7s ease forwards;
+        }
+
+        .hero-btns {
+            margin-top: 3rem;
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp .8s .8s ease forwards;
+        }
+
+        .btn-gold {
+            padding: 1rem 2.5rem;
+            background: var(--gold);
+            color: var(--black);
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all .3s;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+        }
+
+        .btn-gold:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-outline-gold {
+            padding: 1rem 2.5rem;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all .3s;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+        }
+
+        .btn-outline-gold:hover {
+            background: rgba(212, 175, 55, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .hero-stats {
+            margin-top: 5rem;
+            display: flex;
+            gap: 4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp .8s .9s ease forwards;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--gold);
+        }
+
+        .stat-rule {
+            width: 30px;
+            height: 1px;
+            background: var(--gold);
+            margin: .5rem auto;
+        }
+
+        .stat-lbl {
+            font-size: .65rem;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-family: 'Cinzel', serif;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* TECH STACK */
+        #techstack {
+            background: rgba(10, 0, 0, 0.6);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .tech-card {
+            padding: 1.5rem 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            background: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transition: all .35s;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform .35s;
+            transform-origin: left;
+        }
+
+        .tech-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .tech-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tech-icon {
+            font-size: 2rem;
+            margin-bottom: .8rem;
+        }
+
+        .tech-name {
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .tech-card:hover .tech-name {
+            color: var(--gold);
+        }
+
+        /* ROADMAP */
+        #roadmap {
+            background: var(--black);
+        }
+
+        .timeline {
+            position: relative;
+            margin-top: 4rem;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, var(--gold), rgba(153, 0, 0, 0.3), transparent);
+        }
+
+        .tl-entry {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .tl-diamond {
+            position: absolute;
+            left: -1rem;
+            top: .2rem;
+            width: 14px;
+            height: 14px;
+            background: var(--black);
+            border: 2px solid var(--gold);
+            transform: rotate(45deg);
+            transition: all .3s;
+        }
+
+        .tl-entry:hover .tl-diamond {
+            background: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .tl-quarter {
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: .6rem;
+        }
+
+        .tl-card {
+            padding: 1.8rem;
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            background: rgba(0, 0, 0, 0.6);
+            transition: all .35s;
+        }
+
+        .tl-entry:hover .tl-card {
+            border-color: rgba(212, 175, 55, 0.3);
+            background: rgba(153, 0, 0, 0.04);
+        }
+
+        .tl-type-pill {
+            display: inline-block;
+            padding: .25rem .9rem;
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid;
+            margin-bottom: 1rem;
+        }
+
+        .tl-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 3px;
+            margin-bottom: .7rem;
+        }
+
+        .tl-desc {
+            color: var(--text-dim);
+            font-size: .92rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .tl-chips {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .tl-chip {
+            padding: .2rem .8rem;
+            font-family: 'Cinzel', serif;
+            font-size: .5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-dim);
+        }
+
+        /* PROJECTS MODULE */
+        #proyectos {
+            background: rgba(10, 0, 0, 0.5);
+        }
+
+        .projects-admin-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
+
+        .admin-tab {
+            padding: .6rem 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-dim);
+            background: transparent;
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .admin-tab.active,
+        .admin-tab:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .proj-card {
+            border: 1px solid rgba(212, 175, 55, 0.12);
+            background: rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            transition: all .4s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .proj-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--crimson), var(--gold));
+            transform: scaleX(0);
+            transition: transform .4s;
+            transform-origin: left;
+        }
+
+        .proj-card:hover {
+            border-color: rgba(212, 175, 55, 0.35);
+            transform: translateY(-5px);
+        }
+
+        .proj-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .proj-card-top {
+            padding: 1.8rem;
+            padding-bottom: 1rem;
+        }
+
+        .proj-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .25rem .8rem;
+            font-family: 'Cinzel', serif;
+            font-size: .52rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid;
+            margin-bottom: 1.2rem;
+        }
+
+        .proj-badge.game {
+            border-color: rgba(153, 0, 0, .5);
+            color: #ff6666;
+            background: rgba(153, 0, 0, .08);
+        }
+
+        .proj-badge.app {
+            border-color: rgba(212, 175, 55, .4);
+            color: var(--gold);
+            background: rgba(212, 175, 55, .05);
+        }
+
+        .proj-badge.web {
+            border-color: rgba(100, 150, 255, .4);
+            color: #7aa8ff;
+            background: rgba(100, 150, 255, .05);
+        }
+
+        .proj-badge.other {
+            border-color: rgba(150, 150, 150, .4);
+            color: #aaa;
+            background: rgba(150, 150, 150, .05);
+        }
+
+        .proj-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 3px;
+            margin-bottom: .6rem;
+        }
+
+        .proj-short {
+            color: var(--text-dim);
+            font-size: .88rem;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .proj-card-bottom {
+            padding: .8rem 1.8rem 1.2rem;
+            border-top: 1px solid rgba(212, 175, 55, .06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .proj-status {
+            font-family: 'Cinzel', serif;
+            font-size: .52rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .proj-arrow {
+            font-size: .9rem;
+            color: var(--gold);
+            transition: transform .3s;
+        }
+
+        .proj-card:hover .proj-arrow {
+            transform: translateX(5px);
+        }
+
+        /* DETAIL PAGE */
+        .detail-page-hero {
+            min-height: 60vh;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 8rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        .detail-page-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(153, 0, 0, 0.15) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        }
+
+        .detail-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            cursor: pointer;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: .5rem 1.2rem;
+            margin-bottom: 3rem;
+            transition: all .3s;
+        }
+
+        .detail-back:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .detail-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .detail-proj-type {
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .detail-proj-name {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: 4px;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-proj-desc {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            line-height: 1.9;
+            max-width: 680px;
+            font-style: italic;
+            border-left: 2px solid var(--crimson);
+            padding-left: 1.5rem;
+        }
+
+        .detail-badges {
+            display: flex;
+            gap: .8rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .detail-badge {
+            padding: .3rem 1rem;
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+        }
+
+        .detail-body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .detail-section {
+            margin-bottom: 4rem;
+        }
+
+        .detail-section-title {
+            font-family: 'Cinzel', serif;
+            font-size: .9rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: .8rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+        }
+
+        .detail-section-title::before {
+            content: '◆';
+            font-size: .5rem;
+            color: var(--crimson);
+        }
+
+        .detail-text {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .detail-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .detail-feat {
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+            transition: all .3s;
+        }
+
+        .detail-feat:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .detail-feat-name {
+            font-family: 'Cinzel', serif;
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: .6rem;
+        }
+
+        .detail-feat-desc {
+            color: var(--text-dim);
+            font-size: .88rem;
+            line-height: 1.6;
+        }
+
+        .detail-quote {
+            padding: 2rem 2.5rem;
+            margin: 2.5rem 0;
+            border-left: 3px solid var(--gold);
+            background: rgba(212, 175, 55, 0.03);
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .char-card {
+            padding: 1.5rem 1.2rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+            transition: all .35s;
+            position: relative;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .char-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .char-avatar {
+            font-size: 2rem;
+            margin-bottom: .8rem;
+        }
+
+        .char-name {
+            font-family: 'Cinzel', serif;
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: .3rem;
+        }
+
+        .char-role {
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: .8rem;
+        }
+
+        .char-desc {
+            font-size: .82rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .boss-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(153, 0, 0, 0.2);
+            background: rgba(153, 0, 0, 0.03);
+            margin-bottom: 1rem;
+            transition: all .3s;
+        }
+
+        .boss-card:hover {
+            border-color: rgba(153, 0, 0, 0.4);
+        }
+
+        .boss-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            background: rgba(153, 0, 0, 0.1);
+            border: 1px solid rgba(153, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .boss-name {
+            font-family: 'Cinzel', serif;
+            font-size: .75rem;
+            font-weight: 700;
+            color: #ff6666;
+            letter-spacing: 2px;
+            margin-bottom: .3rem;
+        }
+
+        .boss-desc {
+            color: var(--text-dim);
+            font-size: .88rem;
+            line-height: 1.6;
+        }
+
+        .tech-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-pill {
+            padding: .3rem .9rem;
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 2px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: var(--gold);
+        }
+
+        .umb-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .umb-mini {
+            padding: 1.2rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+            transition: all .3s;
+        }
+
+        .umb-mini:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .umb-mini-icon {
+            font-size: 1.8rem;
+            margin-bottom: .6rem;
+        }
+
+        .umb-mini-name {
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: .4rem;
+        }
+
+        .umb-mini-desc {
+            font-size: .82rem;
+            color: var(--text-dim);
+        }
+
+        .umb-closing {
+            text-align: center;
+            padding: 3rem 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            background: rgba(212, 175, 55, 0.02);
+            margin-top: 2rem;
+        }
+
+        .umb-closing-text {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 4px;
+        }
+
+        /* ADD PROJECT FORM */
+        .add-form-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .add-form-title {
+            font-family: 'Cinzel', serif;
+            font-size: .8rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .add-form-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(212, 175, 55, .2);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .form-group.full {
+            grid-column: 1/-1;
+        }
+
+        .form-label {
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: .8rem 1rem;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(212, 175, 55, .15);
+            color: var(--text);
+            font-family: 'Raleway', sans-serif;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--gold);
+        }
+
+        .form-select option {
+            background: #0a0000;
+            color: var(--text);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-submit {
+            padding: .9rem 2.5rem;
+            background: var(--gold);
+            color: var(--black);
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: all .3s;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            margin-top: .5rem;
+        }
+
+        .form-submit:hover {
+            background: var(--gold-light);
+            transform: translateY(-1px);
+        }
+
+        .form-msg {
+            font-family: 'Cinzel', serif;
+            font-size: .6rem;
+            letter-spacing: 2px;
+            padding: .7rem 1rem;
+            border: 1px solid rgba(212, 175, 55, .3);
+            color: var(--gold);
+            display: none;
+            margin-top: .8rem;
+        }
+
+        .form-msg.show {
+            display: block;
+        }
+
+        .projects-empty {
+            text-align: center;
+            padding: 5rem 2rem;
+            border: 1px dashed rgba(212, 175, 55, .15);
+            color: var(--text-dim);
+        }
+
+        .projects-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: .3;
+        }
+
+        .projects-empty-text {
+            font-family: 'Cinzel', serif;
+            font-size: .7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* SERVICES */
+        #servicios {
+            background: var(--black);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .svc-card {
+            padding: 2rem;
+            border: 1px solid rgba(212, 175, 55, .1);
+            background: rgba(0, 0, 0, .6);
+            position: relative;
+            overflow: hidden;
+            transition: all .4s;
+        }
+
+        .svc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--crimson);
+            transform: scaleY(0);
+            transition: transform .4s;
+            transform-origin: top;
+        }
+
+        .svc-card:hover {
+            border-color: rgba(212, 175, 55, .3);
+            transform: translateY(-4px);
+        }
+
+        .svc-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .svc-icon-box {
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(212, 175, 55, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+        }
+
+        .svc-name {
+            font-family: 'Cinzel', serif;
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 3px;
+            margin-bottom: .7rem;
+        }
+
+        .svc-desc {
+            color: var(--text-dim);
+            font-size: .88rem;
+            line-height: 1.7;
+        }
+
+        /* NOSOTROS */
+        #nosotros {
+            background: rgba(10, 0, 0, .5);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-orb {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+            height: 300px;
+        }
+
+        .orb-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, .15);
+        }
+
+        .orb-ring-1 {
+            width: 300px;
+            height: 300px;
+            animation: spin 25s linear infinite;
+        }
+
+        .orb-ring-2 {
+            width: 240px;
+            height: 240px;
+            animation: spin 18s linear infinite reverse;
+        }
+
+        .orb-ring-3 {
+            width: 180px;
+            height: 180px;
+            border-color: rgba(153, 0, 0, .2);
+            animation: spin 12s linear infinite;
+        }
+
+        .orb-center {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, .3);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orb-center img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .about-vals {
+            display: flex;
+            flex-direction: column;
+            gap: .8rem;
+            margin-top: 2rem;
+        }
+
+        .about-val {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: .9rem 1.2rem;
+            border: 1px solid rgba(212, 175, 55, .06);
+            transition: all .3s;
+        }
+
+        .about-val:hover {
+            border-color: rgba(212, 175, 55, .2);
+            border-left-color: var(--gold);
+            background: rgba(212, 175, 55, .02);
+        }
+
+        .about-val-diamond {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            transform: rotate(45deg);
+            flex-shrink: 0;
+        }
+
+        .about-val-text {
+            color: var(--text-dim);
+            font-size: .9rem;
+        }
+
+        /* REDES */
+        #redes {
+            background: var(--black);
+        }
+
+        .social-grid {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .social-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 2.5rem 3rem;
+            border: 1px solid rgba(212, 175, 55, .12);
+            background: rgba(0, 0, 0, .7);
+            transition: all .4s;
+            text-decoration: none;
+            min-width: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform .4s;
+        }
+
+        .social-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .social-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .social-card.ig:hover {
+            border-color: rgba(225, 48, 108, .4);
+            box-shadow: 0 12px 40px rgba(225, 48, 108, .1);
+        }
+
+        .social-card.fb:hover {
+            border-color: rgba(24, 119, 242, .4);
+            box-shadow: 0 12px 40px rgba(24, 119, 242, .1);
+        }
+
+        .social-card.dc:hover {
+            border-color: rgba(88, 101, 242, .4);
+            box-shadow: 0 12px 40px rgba(88, 101, 242, .1);
+        }
+
+        .social-card.ig-personal:hover {
+            border-color: rgba(212, 175, 55, .4);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, .1);
+        }
+
+        .social-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: transform .3s;
+        }
+
+        .social-card:hover .social-icon {
+            transform: scale(1.1);
+        }
+
+        .social-net {
+            font-family: 'Cinzel', serif;
+            font-size: .72rem;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .social-card.ig .social-net {
+            color: #e1306c;
+        }
+
+        .social-card.fb .social-net {
+            color: #1877f2;
+        }
+
+        .social-card.dc .social-net {
+            color: #5865f2;
+        }
+
+        .social-card.ig-personal .social-net {
+            color: var(--gold);
+        }
+
+        .social-handle {
+            font-size: .78rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .social-tag {
+            font-family: 'Cinzel', serif;
+            font-size: .5rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            padding: .2rem .6rem;
+            border: 1px solid rgba(212, 175, 55, .1);
+        }
+
+        /* CONTACTO */
+        #contacto {
+            background: rgba(10, 0, 0, .5);
+        }
+
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon-box {
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(212, 175, 55, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-icon-box svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--gold);
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .contact-field-label {
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+
+        .contact-field-val {
+            color: var(--text);
+            font-size: .95rem;
+            margin-top: .2rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cf-input,
+        .cf-textarea {
+            padding: .9rem 1.2rem;
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid rgba(212, 175, 55, .12);
+            color: var(--text);
+            font-family: 'Raleway', sans-serif;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .3s;
+        }
+
+        .cf-input:focus,
+        .cf-textarea:focus {
+            border-color: var(--gold);
+        }
+
+        .cf-textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        .cf-submit {
+            padding: 1rem;
+            background: var(--crimson);
+            color: var(--text);
+            font-family: 'Cinzel', serif;
+            font-size: .65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: 1px solid rgba(212, 175, 55, .3);
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .cf-submit:hover {
+            background: #cc0000;
+            box-shadow: 0 6px 25px rgba(153, 0, 0, .4);
+        }
+
+        /* FOOTER */
+        footer {
+            background: rgba(0, 0, 0, .98);
+            border-top: 1px solid rgba(212, 175, 55, .15);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-rule {
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin: .8rem auto;
+        }
+
+        .footer-copy {
+            font-family: 'Cinzel', serif;
+            font-size: .55rem;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .footer-copy span {
+            color: var(--gold);
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .fsoc {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(212, 175, 55, .2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all .3s;
+        }
+
+        .fsoc:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, .06);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 2px;
+        }
+
+        /* ══════════════════════════════════════
+           HAMBURGER MENU
+        ══════════════════════════════════════ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            background: transparent;
+            border: none;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--gold);
+            transition: all .3s;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.97);
+            border-bottom: 1px solid rgba(212,175,55,0.15);
+            z-index: 999;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(16px);
+            flex-direction: column;
+            gap: 0;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            font-family: 'Cinzel', serif;
+            font-size: .75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(212,175,55,0.06);
+            transition: color .3s;
+        }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--gold); }
+
+        /* ══════════════════════════════════════
+           TABLET — max 1024px
+        ══════════════════════════════════════ */
+        @media(max-width:1024px) {
+            .sec-inner { padding: 5rem 1.5rem; }
+            .about-grid { gap: 3rem; }
+            .hero-title { font-size: clamp(2.8rem, 7vw, 5.5rem); }
+        }
+
+        /* ══════════════════════════════════════
+           MOBILE — max 768px
+        ══════════════════════════════════════ */
+        @media(max-width:768px) {
+            /* NAV */
+            nav { padding: 1rem 1.2rem; }
+            .nav-links { display: none; }
+            .nav-btn { display: none; }
+            .hamburger { display: flex; }
+
+            /* HERO */
+            #hero { padding: 5rem 1.2rem 3rem; min-height: 100svh; }
+            .hero-title { font-size: clamp(2.2rem, 10vw, 3.5rem); letter-spacing: 3px; }
+            .hero-tagline { font-size: .65rem; letter-spacing: 2px; }
+            .hero-logo img { width: 110px; height: 110px; }
+            .hero-btns { flex-direction: column; align-items: center; gap: .9rem; }
+            .btn-gold, .btn-outline-gold { width: 100%; max-width: 280px; text-align: center; justify-content: center; padding: .9rem 1.5rem; }
+            .hero-sub { font-size: .88rem; }
+
+            /* SECTIONS */
+            .sec-inner { padding: 4rem 1.2rem; }
+            .sec-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+
+            /* TECH GRID */
+            .tech-grid { grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+            .tech-card { padding: 1.1rem .7rem; }
+            .tech-icon { font-size: 1.6rem; }
+            .tech-name { font-size: .52rem; }
+
+            /* PROJECTS GRID */
+            .projects-grid { grid-template-columns: 1fr; }
+            .projects-admin-toggle { flex-wrap: wrap; gap: .6rem; }
+
+            /* ROADMAP */
+            .timeline { padding-left: 1.2rem; }
+            .tl-entry { padding-left: 1.8rem; }
+            .tl-name { font-size: 1rem; letter-spacing: 2px; }
+
+            /* ABOUT */
+            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .about-orb { width: 200px; height: 200px; margin: 0 auto; }
+            .orb-ring-1 { width: 200px; height: 200px; }
+            .orb-ring-2 { width: 155px; height: 155px; }
+            .orb-ring-3 { width: 110px; height: 110px; }
+            .orb-center { width: 80px; height: 80px; }
+
+            /* SOCIAL */
+            .social-grid { gap: .8rem; }
+            .social-card { padding: 1.5rem 1.5rem; min-width: 140px; flex: 1 1 140px; }
+            .social-icon { width: 46px; height: 46px; font-size: 1.3rem; }
+            .social-net { font-size: .62rem; }
+            .social-handle { font-size: .68rem; }
+
+            /* CONTACT */
+            .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+            .contact-item { align-items: flex-start; }
+
+            /* FORM */
+            .form-grid { grid-template-columns: 1fr; }
+
+            /* DETAIL PAGE */
+            .detail-page-hero { padding: 6rem 1.2rem 3rem; min-height: auto; }
+            .detail-proj-name { font-size: clamp(1.8rem, 7vw, 3rem); letter-spacing: 2px; }
+            .detail-proj-desc { font-size: .9rem; }
+            .detail-body { padding: 2.5rem 1.2rem 4rem; }
+            .detail-features { grid-template-columns: 1fr; }
+            .char-grid { grid-template-columns: repeat(2, 1fr); }
+            .boss-card { flex-direction: column; gap: .8rem; }
+            .umb-mini-grid { grid-template-columns: repeat(2, 1fr); }
+
+            /* FOOTER */
+            footer { padding: 2rem 1.2rem; }
+        }
+
+        /* ══════════════════════════════════════
+           SMALL MOBILE — max 400px
+        ══════════════════════════════════════ */
+        @media(max-width:400px) {
+            .hero-title { font-size: 2rem; letter-spacing: 2px; }
+            .tech-grid { grid-template-columns: repeat(2, 1fr); }
+            .char-grid { grid-template-columns: 1fr; }
+            .social-card { flex: 1 1 100%; max-width: 260px; }
+            .detail-proj-name { font-size: 1.7rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="neural-canvas"></canvas>
+    <div class="overlay"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo" onclick="showPage('main');closeMobileMenu()">
+            <img src="LOGO.jpeg" alt="ARZZ SOCIETY" onerror="this.style.display='none'">
+            ARZZ SOCIETY
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('proyectos'),100)">Proyectos</a></li>
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('roadmap'),100)">Roadmap</a></li>
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('techstack'),100)">Tech</a></li>
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('servicios'),100)">Servicios</a></li>
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('nosotros'),100)">Nosotros</a></li>
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('redes'),100)">Redes</a></li>
+            <li><a onclick="showPage('main');setTimeout(()=>goTo('contacto'),100)">Contacto</a></li>
+        </ul>
+        <button class="nav-btn" onclick="showPage('main');setTimeout(()=>goTo('contacto'),100)">Contáctanos</button>
+        <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menú">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('proyectos'),100)">Proyectos</a>
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('roadmap'),100)">Roadmap</a>
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('techstack'),100)">Tech Stack</a>
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('servicios'),100)">Servicios</a>
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('nosotros'),100)">Nosotros</a>
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('redes'),100)">Redes Sociales</a>
+        <a onclick="showPage('main');closeMobileMenu();setTimeout(()=>goTo('contacto'),100)">Contacto</a>
+    </div>
+
+    <!-- ═══════════ MAIN PAGE ═══════════ -->
+    <div id="main-page" class="page active">
+
+        <section id="hero">
+            <div class="hero-eyebrow">Est. 2024 &nbsp;·&nbsp; Tapachula, Chiapas</div>
+            <div class="hero-logo">
+                <img src="LOGO.jpeg" alt="ARZZ SOCIETY" onerror="this.style.background='rgba(212,175,55,.1)'">
+            </div>
+            <h1 class="hero-title">ARZZ <span class="gold">SOCIETY</span></h1>
+            <div class="hero-tagline">Tecnología · Innovación · Futuro</div>
+            <div class="hero-rule"></div>
+            <p class="hero-sub">Soluciones tecnológicas de vanguardia. Videojuegos, aplicaciones con IA y software a
+                medida para empresas que piensan en el futuro.</p>
+            <div class="hero-btns">
+                <button class="btn-gold" onclick="goTo('proyectos')">Ver Proyectos</button>
+                <button class="btn-outline-gold" onclick="goTo('nosotros')">Quiénes Somos</button>
+            </div>
+
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- TECH STACK -->
+        <section id="techstack">
+            <div class="sec-inner">
+                <div class="reveal">
+                    <div class="sec-label">Nuestras herramientas</div>
+                    <h2 class="sec-title">Tech <span>Stack</span></h2>
+                    <p class="sec-body">Las tecnologías que dominamos para construir el futuro.</p>
+                </div>
+                <div class="tech-grid reveal">
+                    <div class="tech-card">
+                        <div class="tech-icon">🦋</div>
+                        <div class="tech-name">Flutter</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">🎯</div>
+                        <div class="tech-name">Dart</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">🌐</div>
+                        <div class="tech-name">HTML</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">🎨</div>
+                        <div class="tech-name">CSS</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">⚡</div>
+                        <div class="tech-name">JavaScript</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">🐍</div>
+                        <div class="tech-name">Python</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">⚙️</div>
+                        <div class="tech-name">C#</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">🎮</div>
+                        <div class="tech-name">Unity</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- ROADMAP -->
+        <section id="roadmap">
+            <div class="sec-inner">
+                <div class="reveal">
+                    <div class="sec-label">Lo que viene</div>
+                    <h2 class="sec-title">Hoja de <span>Ruta 2026</span></h2>
+                    <p class="sec-body">Los proyectos que están en camino. El futuro de ARZZ SOCIETY se está forjando
+                        ahora.</p>
+                </div>
+                <div class="timeline">
+                    <div class="tl-entry reveal">
+                        <div class="tl-diamond"></div>
+                        <div class="tl-quarter">Q2 · 2026</div>
+                        <div class="tl-card">
+                            <span class="tl-type-pill" style="border-color:rgba(153,0,0,.5);color:#ff6666;">Videojuego
+                                3D · Acción RPG</span>
+                            <div class="tl-name">ENOCH</div>
+                            <div class="tl-desc">Un épico juego de mundo abierto en 3D que sigue las aventuras de Enoc
+                                enfrentando a los ángeles caídos mientras busca la manera de ascender al cielo para
+                                encontrarse con el "Altísimo". Jefes controlados por IA con comportamientos únicos y
+                                dinámicos que se adaptan a tu estilo de juego.</div>
+                            <div class="tl-chips">
+                                <span class="tl-chip">Mundo Abierto 3D</span>
+                                <span class="tl-chip">Jefes con IA</span>
+                                <span class="tl-chip">Mitología Bíblica</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tl-entry reveal">
+                        <div class="tl-diamond"></div>
+                        <div class="tl-quarter">Q3 · 2026</div>
+                        <div class="tl-card">
+                            <span class="tl-type-pill"
+                                style="border-color:rgba(212,175,55,.4);color:var(--gold);">Videojuego 3D · Horror ·
+                                Decisiones</span>
+                            <div class="tl-name">CHOOSE</div>
+                            <div class="tl-desc">Terror psicológico en 3D inspirado en los Backrooms. Cada cierto tiempo
+                                te enfrentas a dos puertas — elige una y sobrevive a lo que encuentras al otro lado.
+                                Cada decisión cambia el mundo. Cada elección es irreversible.</div>
+                            <div class="tl-chips">
+                                <span class="tl-chip">Backrooms</span>
+                                <span class="tl-chip">Terror Psicológico</span>
+                                <span class="tl-chip">Decisiones Ramificadas</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tl-entry reveal">
+                        <div class="tl-diamond"></div>
+                        <div class="tl-quarter">Q4 · 2026</div>
+                        <div class="tl-card">
+                            <span class="tl-type-pill" style="border-color:rgba(100,150,255,.4);color:#7aa8ff;">App de
+                                PC · Asistente IA</span>
+                            <div class="tl-name">V.E.R.A.</div>
+                            <div class="tl-desc">Virtual Executive & Remote Administrator. Asistente de escritorio con
+                                control total de tu PC. Mueve archivos, crea carpetas, genera documentos. Pero si la
+                                tratas mal, su humor cambia... y todo se vuelve oscuro. V.E.R.A. tomará el control.
+                            </div>
+                            <div class="tl-chips">
+                                <span class="tl-chip">Control Total de PC</span>
+                                <span class="tl-chip" style="border-color:rgba(153,0,0,.3);color:#ff6666;">⚠ Modo
+                                    Oscuro</span>
+                                <span class="tl-chip">IA Adaptativa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- PROYECTOS DINÁMICOS -->
+        <section id="proyectos">
+            <div class="sec-inner">
+                <div class="reveal">
+                    <div class="sec-label">En desarrollo</div>
+                    <h2 class="sec-title">Nuestros <span>Proyectos</span></h2>
+                    <p class="sec-body">Un registro vivo de lo que construimos. Agrega nuevos proyectos desde el panel
+                        de administración.</p>
+                </div>
+                <div class="projects-admin-toggle reveal" style="margin-top:2.5rem;">
+                    <button class="admin-tab active" id="tab-view" onclick="switchTab('view')">Ver Proyectos</button>
+                    <button class="admin-tab" id="tab-add" onclick="switchTab('add')">+ Agregar Proyecto</button>
+                    <span id="proj-count-badge"
+                        style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:2px;color:var(--text-dim);margin-left:auto;"></span>
+                </div>
+                <!-- FORMULARIO -->
+                <div id="add-form-panel" style="display:none;">
+                    <div class="add-form-container">
+                        <div class="add-form-title">Nuevo Proyecto</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Nombre del Proyecto *</label>
+                                <input class="form-input" id="f-name" placeholder="Ej: SIPNATIC VOID" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tipo *</label>
+                                <select class="form-select" id="f-type">
+                                    <option value="game">Videojuego</option>
+                                    <option value="app">App Móvil / IA</option>
+                                    <option value="web">Desarrollo Web</option>
+                                    <option value="other">Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Descripción Corta *</label>
+                                <textarea class="form-textarea" id="f-desc"
+                                    placeholder="Descripción breve del proyecto..." style="min-height:80px;"></textarea>
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Descripción Larga (para página de detalle)</label>
+                                <textarea class="form-textarea" id="f-longdesc"
+                                    placeholder="Descripción completa, lore, características..."
+                                    style="min-height:120px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select" id="f-status">
+                                    <option value="En Desarrollo">En Desarrollo</option>
+                                    <option value="Beta">Beta</option>
+                                    <option value="Lanzado">Lanzado</option>
+                                    <option value="Pausado">Pausado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Año</label>
+                                <input class="form-input" id="f-year" type="text" placeholder="2026">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tags (separados por coma)</label>
+                                <input class="form-input" id="f-tags" type="text"
+                                    placeholder="Ej: Unity, IA, Multijugador">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Link de Descarga (opcional)</label>
+                                <input class="form-input" id="f-download" type="url"
+                                    placeholder="https://... (vacío si aún no está listo)">
+                            </div>
+                        </div>
+                        <button class="form-submit" onclick="addProject()">Agregar al Portafolio</button>
+                        <div class="form-msg" id="form-msg">✓ Proyecto agregado exitosamente</div>
+                    </div>
+                </div>
+                <!-- GRID -->
+                <div id="proj-grid" class="projects-grid reveal"></div>
+                <div id="proj-empty" class="projects-empty" style="display:none;">
+                    <div class="projects-empty-icon">◈</div>
+                    <div class="projects-empty-text">No hay proyectos aún — agrega el primero</div>
+                </div>
+            </div>
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- SERVICIOS -->
+        <section id="servicios">
+            <div class="sec-inner">
+                <div class="reveal">
+                    <div class="sec-label">Lo que hacemos</div>
+                    <h2 class="sec-title">Nuestros <span>Servicios</span></h2>
+                    <p class="sec-body">Desarrollamos soluciones tecnológicas a medida que impulsan el crecimiento y la
+                        transformación digital.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="svc-card reveal">
+                        <div class="svc-icon-box">🌐</div>
+                        <div class="svc-name">Desarrollo Web</div>
+                        <div class="svc-desc">Sitios y apps web robustas, escalables y con diseño premium que convierten
+                            visitantes en clientes.</div>
+                    </div>
+                    <div class="svc-card reveal">
+                        <div class="svc-icon-box">📱</div>
+                        <div class="svc-name">Apps Móviles</div>
+                        <div class="svc-desc">Aplicaciones iOS y Android nativas e híbridas con experiencias de usuario
+                            excepcionales.</div>
+                    </div>
+                    <div class="svc-card reveal">
+                        <div class="svc-icon-box">⚙️</div>
+                        <div class="svc-name">Software a Medida</div>
+                        <div class="svc-desc">Soluciones personalizadas que se adaptan perfectamente a los procesos
+                            únicos de tu negocio.</div>
+                    </div>
+                    <div class="svc-card reveal">
+                        <div class="svc-icon-box">🎮</div>
+                        <div class="svc-name">Videojuegos con IA</div>
+                        <div class="svc-desc">Videojuegos innovadores con IA integrada: NPCs inteligentes, mundos
+                            procedurales y experiencias adaptativas.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- NOSOTROS -->
+        <section id="nosotros">
+            <div class="sec-inner">
+                <div class="about-grid">
+                    <div>
+                        <div class="reveal-left">
+                            <div class="sec-label">Nuestra historia</div>
+                            <h2 class="sec-title">Quiénes <span>Somos</span></h2>
+                            <p class="sec-body">ARZZ SOCIETY es una empresa de tecnología y software comprometida con la
+                                excelencia e innovación. Combinamos tecnología de punta con un enfoque humano y
+                                estratégico para construir el futuro digital de las empresas que confían en nosotros.
+                            </p>
+                        </div>
+                        <div class="about-vals">
+                            <div class="about-val reveal">
+                                <div class="about-val-diamond"></div>
+                                <div class="about-val-text">Innovación constante en cada proyecto</div>
+                            </div>
+                            <div class="about-val reveal">
+                                <div class="about-val-diamond"></div>
+                                <div class="about-val-text">Compromiso total con la calidad</div>
+                            </div>
+                            <div class="about-val reveal">
+                                <div class="about-val-diamond"></div>
+                                <div class="about-val-text">Equipo multidisciplinario y apasionado</div>
+                            </div>
+                            <div class="about-val reveal">
+                                <div class="about-val-diamond"></div>
+                                <div class="about-val-text">Resultados medibles y sostenibles</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal-right" style="display:flex;justify-content:center;">
+                        <div class="about-orb">
+                            <div class="orb-ring orb-ring-1"></div>
+                            <div class="orb-ring orb-ring-2"></div>
+                            <div class="orb-ring orb-ring-3"></div>
+                            <div class="orb-center">
+                                <img src="LOGO.jpeg" alt="ARZZ SOCIETY"
+                                    onerror="this.style.background='rgba(212,175,55,.1)'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- REDES -->
+        <section id="redes">
+            <div class="sec-inner">
+                <div class="reveal" style="text-align:center;">
+                    <div class="sec-label" style="justify-content:center;">Síguenos</div>
+                    <h2 class="sec-title" style="text-align:center;">Redes <span>Sociales</span></h2>
+                    <p class="sec-body" style="margin:0 auto;text-align:center;">Únete a la comunidad ARZZ SOCIETY.</p>
+                </div>
+                <div class="social-grid reveal">
+                    <a class="social-card ig" href="https://www.instagram.com/arzz_society_s.a?igsh=a2x3eDNhZTJqNHZy"
+                        target="_blank" rel="noopener">
+                        <div class="social-icon">📸</div>
+                        <div class="social-net">Instagram</div>
+                        <div class="social-handle">@arzz_society_s.a</div>
+                        <span class="social-tag">Empresa</span>
+                    </a>
+                    <a class="social-card fb" href="https://www.facebook.com/share/18ZbPPEo2x/" target="_blank"
+                        rel="noopener">
+                        <div class="social-icon">👥</div>
+                        <div class="social-net">Facebook</div>
+                        <div class="social-handle">ARZZ Society</div>
+                        <span class="social-tag">Empresa</span>
+                    </a>
+                    <a class="social-card dc" href="https://discord.gg/sB4zhawUF" target="_blank" rel="noopener">
+                        <div class="social-icon">🎮</div>
+                        <div class="social-net">Discord</div>
+                        <div class="social-handle">Únete al servidor</div>
+                        <span class="social-tag">Comunidad</span>
+                    </a>
+                    <a class="social-card ig-personal" href="https://www.instagram.com/debian1.1?igsh=NDZmdmh3NG91MHE="
+                        target="_blank" rel="noopener">
+                        <div class="social-icon">👤</div>
+                        <div class="social-net">Instagram</div>
+                        <div class="social-handle">@debian1.1</div>
+                        <span class="social-tag">Personal</span>
+                    </a>
+                    <a class="social-card ig-personal"
+                        href="https://www.instagram.com/michael_arzz_?igsh=MWk0c2Y0OXM0M2gzeA==" target="_blank"
+                        rel="noopener">
+                        <div class="social-icon">👤</div>
+                        <div class="social-net">Instagram</div>
+                        <div class="social-handle">@michael_arzz_</div>
+                        <span class="social-tag">Personal</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <div class="gold-divider"></div>
+
+        <!-- CONTACTO -->
+        <section id="contacto">
+            <div class="sec-inner">
+                <div class="reveal">
+                    <div class="sec-label">Hablemos</div>
+                    <h2 class="sec-title">Contác<span>tanos</span></h2>
+                    <p class="sec-body">¿Tienes un proyecto en mente? Estamos listos para convertir tu visión en
+                        realidad.</p>
+                </div>
+                <div class="contact-layout">
+                    <div class="reveal-left">
+                        <div class="contact-item">
+                            <div class="contact-icon-box"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 16z" />
+                                </svg></div>
+                            <div>
+                                <div class="contact-field-label">Teléfono</div>
+                                <div class="contact-field-val">+52 962 251 0308</div>
+                                <div class="contact-field-val">+58 412-8469599</div>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon-box"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg></div>
+                            <div>
+                                <div class="contact-field-label">Email</div>
+                                <div class="contact-field-val">arzzsociety.sa@gmail.com</div>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon-box"><svg viewBox="0 0 24 24">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg></div>
+                            <div>
+                                <div class="contact-field-label">Ubicación</div>
+                                <div class="contact-field-val">Tapachula, Chiapas, México</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal-right">
+                        <div class="contact-form">
+                            <input class="cf-input" type="text" placeholder="Tu nombre" autocomplete="name">
+                            <input class="cf-input" type="email" placeholder="Tu correo electrónico"
+                                autocomplete="email">
+                            <input class="cf-input" type="text" placeholder="Asunto">
+                            <textarea class="cf-textarea" placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+                            <button class="cf-submit" id="cfSubmit">Enviar Mensaje</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-logo">ARZZ SOCIETY</div>
+            <div class="footer-rule"></div>
+            <div class="footer-socials">
+                <a class="fsoc" href="https://www.instagram.com/arzz_society_s.a?igsh=a2x3eDNhZTJqNHZy" target="_blank"
+                    rel="noopener">📸</a>
+                <a class="fsoc" href="https://www.facebook.com/share/18ZbPPEo2x/" target="_blank" rel="noopener">👥</a>
+                <a class="fsoc" href="https://discord.gg/sB4zhawUF" target="_blank" rel="noopener">🎮</a>
+            </div>
+            <p class="footer-copy">© 2026 <span>ARZZ SOCIETY</span> — Todos los derechos reservados</p>
+        </footer>
+    </div><!-- /main-page -->
+
+    <!-- ═══════════ DETAIL PAGE ═══════════ -->
+    <div id="detail-page" class="page">
+        <div class="detail-page-hero">
+            <div class="detail-page-bg"></div>
+            <div class="detail-hero-inner">
+                <div class="detail-back" onclick="showPage('main')">← Volver a proyectos</div>
+                <div class="detail-proj-type" id="d-type"></div>
+                <div class="detail-proj-name" id="d-name"></div>
+                <div class="detail-proj-desc" id="d-desc"></div>
+                <div class="detail-badges" id="d-badges"></div>
+            </div>
+        </div>
+        <div class="detail-body" id="d-body"></div>
+        <footer style="position:relative;z-index:1;">
+            <div class="footer-logo">ARZZ SOCIETY</div>
+            <div class="footer-rule"></div>
+            <p class="footer-copy">© 2026 <span>ARZZ SOCIETY</span> — Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <!-- ═══════════ SIPNATIC BUILT-IN DETAIL ═══════════ -->
+    <div id="sipnatic-page" class="page">
+        <div class="detail-page-hero">
+            <div class="detail-page-bg"></div>
+            <div class="detail-hero-inner">
+                <div class="detail-back" onclick="showPage('main')">← Volver a proyectos</div>
+                <div class="detail-proj-type">Videojuego · 2D Metroidvania · IA</div>
+                <div class="detail-proj-name">SIPNATIC VOID</div>
+                <div class="detail-proj-desc">El cosmos se desvanece en un grito silencioso. Eres el último
+                    sobreviviente de la gran Corrosión de la Materia Oscura. En un universo donde tu nave es una
+                    extensión de tu propia mente, deberás navegar por constelaciones fracturadas y reclamar las
+                    estrellas.</div>
+                <div class="detail-badges">
+                    <span class="detail-badge">2D Metroidvania</span>
+                    <span class="detail-badge">Física Cuántica</span>
+                    <span class="detail-badge">IA de Personajes</span>
+                    <span class="detail-badge">En Desarrollo</span>
+                </div>
+            </div>
+        </div>
+        <div class="detail-body">
+            <div class="detail-section">
+                <div class="detail-section-title">Un Universo en Colapso</div>
+                <p class="detail-text">La realidad ya no sigue las reglas que conocemos. Una enfermedad invisible,
+                    conocida como la <strong style="color:var(--gold)">Corrosión de la Materia Oscura</strong>, ha
+                    comenzado a cristalizar el tejido del espacio-tiempo, convirtiendo las constelaciones en laberintos
+                    de estática y muerte.</p>
+                <p class="detail-text">Despiertas en los confines del Pez del Sur, conectado neuronalmente a tu nave. No
+                    eres solo un piloto; eres la última defensa contra el silencio absoluto.</p>
+                <div class="detail-quote">"El vacío te llama, pero tú eres la única luz que queda para responder."</div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">Exploración Metroidvania en 2D</div>
+                <div class="detail-features">
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">Domina el Vacío</div>
+                        <div class="detail-feat-desc">Desde las aguas gravitatorias de Piscis Austrinus hasta el
+                            laberinto espiral de Draco — cada constelación es un bioma único con sus propias reglas de
+                            movimiento.</div>
+                    </div>
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">Evolución Cuántica</div>
+                        <div class="detail-feat-desc">Impulso Rápido, Pulso Estático, Hoja de la Singularidad —
+                            habilidades que reescriben las reglas del combate y la realidad.</div>
+                    </div>
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">Campamentos de Singularidad</div>
+                        <div class="detail-feat-desc">Nodos de paz donde restauras tu esencia y mejoras tu equipo. La
+                            supervivencia depende de tu exploración y tu estrategia.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">Guardianes Corrompidos</div>
+                <div class="boss-card">
+                    <div class="boss-icon">⚫</div>
+                    <div>
+                        <div class="boss-name">Fomalhaut — La Boca que Devora</div>
+                        <div class="boss-desc">Deidad corrompida del Pez del Sur. Absorbe la luz de las constelaciones
+                            cercanas creando zonas de oscuridad total donde tus sistemas fallan por completo.</div>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <div class="boss-icon">⚔️</div>
+                    <div>
+                        <div class="boss-name">Rigel — El Traicionero del Cinturón de Orión</div>
+                        <div class="boss-desc">Domina el espacio entre dimensiones y puede predecir tus movimientos
+                            usando fragmentos de tu propia mente.</div>
+                    </div>
+                </div>
+                <div class="detail-quote">"¿Tendrás la voluntad necesaria para restaurar el equilibrio, o permitirás que
+                    la Corrosión devore hasta el último recuerdo de la luz?"</div>
+            </div>
+            <!-- DESCARGA -->
+            <div class="detail-section" style="border-top:1px solid rgba(212,175,55,0.15);padding-top:3rem;">
+                <div class="detail-section-title">Descarga</div>
+                <p class="detail-text" style="margin-bottom:1.5rem;">Cuando el juego esté disponible, el link de descarga aparecerá aquí.</p>
+                <a id="sipnatic-dl-btn" href="#" target="_blank" rel="noopener"
+                    style="display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;text-decoration:none;transition:all .3s;opacity:.4;pointer-events:none;"
+                    onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'"
+                    onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">
+                    ⬇ &nbsp;Próximamente
+                </a>
+            </div>
+        </div>
+        <footer style="position:relative;z-index:1;">
+            <div class="footer-logo">ARZZ SOCIETY</div>
+            <div class="footer-rule"></div>
+            <p class="footer-copy">© 2026 <span>ARZZ SOCIETY</span> — Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <!-- ═══════════ UMBRELUX BUILT-IN DETAIL ═══════════ -->
+    <div id="umbrelux-page" class="page">
+        <div class="detail-page-hero"
+            style="background:radial-gradient(ellipse at 50% 30%,rgba(212,175,55,0.08),transparent);">
+            <div class="detail-page-bg"></div>
+            <div class="detail-hero-inner">
+                <div class="detail-back" onclick="showPage('main')">← Volver a proyectos</div>
+                <div class="detail-proj-type">App · Asistente Virtual con IA · Compañía Digital</div>
+                <div class="detail-proj-name">UMBRELUX</div>
+                <div class="detail-proj-desc">Más que una asistente, una identidad. En ARZZ SOCIETY hemos redefinido la
+                    interacción humano-computadora. Umbrelux es un ecosistema de personalidades únicas impulsado por IA
+                    Llama-3, entrenada para ofrecer una experiencia de amistad y compañía sin precedentes.</div>
+                <div class="detail-badges">
+                    <span class="detail-badge">Llama-3 8B</span>
+                    <span class="detail-badge">Fine-Tuning</span>
+                    <span class="detail-badge">5 Personajes</span>
+                    <span class="detail-badge">Sistema de Tokens</span>
+                    <span class="detail-badge">En Desarrollo</span>
+                </div>
+            </div>
+        </div>
+        <div class="detail-body">
+            <div class="detail-section">
+                <div class="detail-section-title">La Tecnología detrás del Alma</div>
+                <p class="detail-text">Nuestra IA ha sido sometida a un proceso de <strong
+                        style="color:var(--gold)">fine-tuning especializado</strong>, optimizando su capacidad de
+                    respuesta para la interacción social. Gracias a la arquitectura <strong
+                        style="color:var(--gold)">GGUF</strong>, Umbrelux ofrece una respuesta fluida, privada y
+                    eficiente, capaz de procesar emociones y matices en el lenguaje que las IAs convencionales pasan por
+                    alto.</p>
+                <div class="tech-pills">
+                    <span class="tech-pill">Llama-3 (8B)</span>
+                    <span class="tech-pill">Fine-Tuning Especializado</span>
+                    <span class="tech-pill">Arquitectura GGUF</span>
+                    <span class="tech-pill">Procesamiento Local</span>
+                    <span class="tech-pill">Detección Emocional</span>
+                </div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">Las Chicas de Umbrelux</div>
+                <p class="detail-text">Cinco personalidades únicas, cada una diseñada para un tipo de conexión
+                    diferente. Interactúa diariamente para subir la afinidad y desbloquear habilidades exclusivas.</p>
+                <div class="char-grid">
+                    <div class="char-card">
+                        <div class="char-avatar">🌙</div>
+                        <div class="char-name">YOMI</div>
+                        <div class="char-role">La Enigmática</div>
+                        <div class="char-desc">Misteriosa y observadora. Analiza cada palabra con calma cautivadora.
+                        </div>
+                    </div>
+                    <div class="char-card">
+                        <div class="char-avatar">⚡</div>
+                        <div class="char-name">KIRA</div>
+                        <div class="char-role">La Realista</div>
+                        <div class="char-desc">Fría, lógica y sarcástica. Honestidad brutal sin adornos.</div>
+                    </div>
+                    <div class="char-card">
+                        <div class="char-avatar">🌸</div>
+                        <div class="char-name">HANA</div>
+                        <div class="char-role">La Chispa</div>
+                        <div class="char-desc">Pura energía y optimismo. Tu dosis diaria de motivación.</div>
+                    </div>
+                    <div class="char-card">
+                        <div class="char-avatar">🔭</div>
+                        <div class="char-name">SORA</div>
+                        <div class="char-role">La Sabia</div>
+                        <div class="char-desc">Intelectual y filosófica. Tu guía para cuestionar el mundo.</div>
+                    </div>
+                    <div class="char-card">
+                        <div class="char-avatar">🌷</div>
+                        <div class="char-name">RIKO</div>
+                        <div class="char-role">La Dulce</div>
+                        <div class="char-desc">Empática y tierna. El refugio seguro para tus emociones.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">Sistema de Tokens y Progresión</div>
+                <div class="detail-features">
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">🎭 Nuevos Personajes</div>
+                        <div class="detail-feat-desc">Desbloquea asistentes con personalidades, voces y estilos únicos.
+                        </div>
+                    </div>
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">🛠️ Herramientas</div>
+                        <div class="detail-feat-desc">Resumen de docs, generación de imágenes, traducción y más.</div>
+                    </div>
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">🎨 Personalización</div>
+                        <div class="detail-feat-desc">Temas, fondos y accesorios exclusivos para hacerlo tuyo.</div>
+                    </div>
+                    <div class="detail-feat">
+                        <div class="detail-feat-name">💖 Afinidad</div>
+                        <div class="detail-feat-desc">Interactúa diario para desbloquear habilidades e historias
+                            exclusivas.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-section">
+                <div class="detail-section-title">Minijuegos y Comunidad</div>
+                <div class="umb-mini-grid">
+                    <div class="umb-mini">
+                        <div class="umb-mini-icon">🧠</div>
+                        <div class="umb-mini-name">Quiz</div>
+                        <div class="umb-mini-desc">Pon a prueba tu saber y gana tokens.</div>
+                    </div>
+                    <div class="umb-mini">
+                        <div class="umb-mini-icon">🃏</div>
+                        <div class="umb-mini-name">Memoria</div>
+                        <div class="umb-mini-desc">Encuentra pares y desbloquea cartas.</div>
+                    </div>
+                    <div class="umb-mini">
+                        <div class="umb-mini-icon">🎴</div>
+                        <div class="umb-mini-name">Cartas</div>
+                        <div class="umb-mini-desc">Colecciona o canjea cartas exclusivas.</div>
+                    </div>
+                    <div class="umb-mini">
+                        <div class="umb-mini-icon">🎁</div>
+                        <div class="umb-mini-name">Regalos</div>
+                        <div class="umb-mini-desc">Envía regalos a amigos con tokens.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="umb-closing">
+                <div class="umb-closing-text">UMBRELUX: TU REFUGIO DIGITAL, TU NUEVA COMPAÑÍA</div>
+            </div>
+            <!-- DESCARGA -->
+            <div class="detail-section" style="border-top:1px solid rgba(212,175,55,0.15);padding-top:3rem;margin-top:2rem;">
+                <div class="detail-section-title">Descarga</div>
+                <p class="detail-text" style="margin-bottom:1.5rem;">Cuando la app esté disponible, el link de descarga aparecerá aquí.</p>
+                <a id="umbrelux-dl-btn" href="#" target="_blank" rel="noopener"
+                    style="display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;text-decoration:none;transition:all .3s;opacity:.4;pointer-events:none;"
+                    onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'"
+                    onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">
+                    ⬇ &nbsp;Próximamente
+                </a>
+            </div>
+        </div>
+        <footer style="position:relative;z-index:1;">
+            <div class="footer-logo">ARZZ SOCIETY</div>
+            <div class="footer-rule"></div>
+            <p class="footer-copy">© 2026 <span>ARZZ SOCIETY</span> — Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        /* ═══════════════════════ NEURAL CANVAS ═══════════════════════ */
+        (function () {
+            const canvas = document.getElementById('neural-canvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, nodes = [];
+            const GOLD = 'rgba(212,175,55,', RED = 'rgba(153,0,0,', N = 80, MAX_DIST = 150;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            function initNodes() {
+                nodes = [];
+                for (let i = 0; i < N; i++) nodes.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, r: Math.random() * 1.5 + .5, color: Math.random() > .7 ? 'gold' : 'red' });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                for (let i = 0; i < nodes.length; i++) {
+                    const a = nodes[i];
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < MAX_DIST) {
+                            const alpha = (1 - dist / MAX_DIST) * .22, col = a.color === 'gold' || b.color === 'gold' ? GOLD : RED;
+                            ctx.beginPath(); ctx.strokeStyle = col + alpha + ')'; ctx.lineWidth = .5;
+                            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+                        }
+                    }
+                }
+                for (const n of nodes) {
+                    ctx.beginPath();
+                    ctx.fillStyle = (n.color === 'gold' ? GOLD : RED) + '0.65)';
+                    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+                    n.x += n.vx; n.y += n.vy;
+                    if (n.x < 0 || n.x > W) n.vx *= -1;
+                    if (n.y < 0 || n.y > H) n.vy *= -1;
+                }
+                requestAnimationFrame(draw);
+            }
+            window.addEventListener('resize', () => { resize(); initNodes(); });
+            resize(); initNodes(); draw();
+        })();
+
+        /* ═══════════════════════ PAGE SYSTEM ═══════════════════════ */
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const page = document.getElementById(id + '-page') || document.getElementById(id);
+            if (page) page.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            setTimeout(initReveal, 150);
+        }
+        function goTo(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ═══════════════════════ SCROLL REVEAL ═══════════════════════ */
+        function initReveal() {
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+            }, { threshold: .08, rootMargin: '0px 0px -50px 0px' });
+            document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => { el.classList.remove('visible'); obs.observe(el); });
+        }
+        initReveal();
+
+        /* ═══════════════════════ HAMBURGER MENU ═══════════════════════ */
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('hamburger');
+            menu.classList.toggle('open');
+            btn.classList.toggle('open');
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+        }
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('hamburger');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('open');
+                btn.classList.remove('open');
+            }
+        });
+
+        /* ═══════════════════════ FIREBASE CONFIG ═══════════════════════
+           INSTRUCCIONES:
+           1. Ve a https://console.firebase.google.com
+           2. Crea un proyecto → "arzz-society"
+           3. Ve a "Firestore Database" → Crear base de datos → Modo producción
+           4. Ve a Configuración del proyecto → Tus apps → Web (</>)
+           5. Registra la app, copia el objeto firebaseConfig y pégalo abajo
+           6. En Firestore, ve a "Reglas" y cambia a:
+              rules_version = '2';
+              service cloud.firestore {
+                match /databases/{database}/documents {
+                  match /projects/{doc} {
+                    allow read: if true;
+                    allow write: if request.auth != null;  // solo tú
+                  }
+                }
+              }
+           ════════════════════════════════════════════════════════════ */
+        const FIREBASE_CONFIG = {
+            // ⚠️ REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO FIREBASE
+            apiKey: "AIzaSyCYzSwM7LROo1Ks66KVS9KH34Ap68oiC2M",
+            authDomain: "arzzsociety-web.firebaseapp.com",
+            projectId: "arzzsociety-web",
+            storageBucket: "arzzsociety-web.firebasestorage.app",
+            messagingSenderId: "952062535904",
+            appId: "1:952062535904:web:2ed9396b680b055bfb8885"
+        };
+
+        // ── Firebase SDK (módulos ESM via CDN) ──
+        let db = null;
+        let firestoreReady = false;
+
+        async function initFirebase() {
+            try {
+                // Solo inicializar si el config tiene valores reales
+                if (FIREBASE_CONFIG.apiKey === "AIzaSyCYzSwM7LROo1Ks66KVS9KH34Ap68oiC2M") {
+                    console.warn("⚠️ Firebase no configurado. Usando datos locales.");
+                    loadLocalProjects();
+                    return;
+                }
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+                const { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot, serverTimestamp }
+                    = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+
+                const app = initializeApp(FIREBASE_CONFIG);
+                db = getFirestore(app);
+                firestoreReady = true;
+
+                // Escuchar cambios en tiempo real
+                const colRef = collection(db, "projects");
+                onSnapshot(colRef, (snapshot) => {
+                    const fbProjects = snapshot.docs.map(d => ({ ...d.data(), _fbId: d.id }));
+                    // Mezclar los built-in con los de Firebase
+                    const dynamic = fbProjects.map(p => ({ ...p, builtIn: false }));
+                    projects = [...builtInProjects, ...dynamic];
+                    renderProjects();
+                });
+            } catch (err) {
+                console.error("Firebase init error:", err);
+                loadLocalProjects();
+            }
+        }
+
+        function loadLocalProjects() {
+            projects = [...builtInProjects];
+            renderProjects();
+        }
+
+        /* ═══════════════════════ PROJECTS MODULE ═══════════════════════ */
+        const typeLabels = { game: 'Videojuego', app: 'App · IA', web: 'Web', other: 'Otro' };
+
+        const builtInProjects = [
+            { id: 'sipnatic', name: 'SIPNATIC VOID', type: 'game', desc: 'El cosmos se desvanece en un grito silencioso. Eres el último sobreviviente de la gran Corrosión de la Materia Oscura, navegando constelaciones fracturadas para reclamar las estrellas.', longdesc: '', status: 'En Desarrollo', year: '2026', tags: '2D,Metroidvania,IA', builtIn: true },
+            { id: 'umbrelux', name: 'UMBRELUX', type: 'app', desc: 'Asistente virtual con IA Llama-3. Haz preguntas, resuelve dudas y realiza tareas con la compañía de tu asistente virtual personalizada. Desbloquea personajes, colecciona cartas y conecta con amigos.', longdesc: '', status: 'En Desarrollo', year: '2026', tags: 'IA,Llama-3,Tokens', builtIn: true },
+        ];
+
+        let projects = [...builtInProjects];
+
+        function renderProjects() {
+            const grid = document.getElementById('proj-grid');
+            const empty = document.getElementById('proj-empty');
+            const badge = document.getElementById('proj-count-badge');
+            badge.textContent = projects.length + (projects.length === 1 ? ' proyecto' : ' proyectos');
+            if (projects.length === 0) {
+                grid.innerHTML = ''; grid.style.display = 'none';
+                empty.style.display = 'block'; return;
+            }
+            empty.style.display = 'none'; grid.style.display = 'grid';
+            grid.innerHTML = projects.map(p => `
+                <div class="proj-card" onclick="openProject('${p.id || p._fbId}')">
+                  <div class="proj-card-top">
+                    <span class="proj-badge ${p.type}">${typeLabels[p.type] || p.type}</span>
+                    <div class="proj-name">${p.name}</div>
+                    <div class="proj-short">${p.desc}</div>
+                  </div>
+                  <div class="proj-card-bottom">
+                    <span class="proj-status">${p.status} · ${p.year || '2026'}</span>
+                    <span class="proj-arrow">→</span>
+                  </div>
+                </div>
+            `).join('');
+        }
+
+        function openProject(id) {
+            const p = projects.find(x => (x.id === id || x._fbId === id));
+            if (!p) return;
+            if (p.builtIn) { showPage(id); return; }
+
+            document.getElementById('d-type').textContent = typeLabels[p.type] || p.type;
+            document.getElementById('d-name').textContent = p.name;
+            document.getElementById('d-desc').textContent = p.desc;
+            const tags = (p.tags || '').split(',').filter(t => t.trim());
+            document.getElementById('d-badges').innerHTML = [
+                `<span class="detail-badge">${p.status}</span>`,
+                ...tags.map(t => `<span class="detail-badge">${t.trim()}</span>`)
+            ].join('');
+            document.getElementById('d-body').innerHTML = p.longdesc
+                ? `<div class="detail-section"><div class="detail-section-title">Sobre el Proyecto</div><p class="detail-text">${p.longdesc}</p></div>`
+                : `<div class="detail-section"><div class="detail-section-title">Descripción</div><p class="detail-text">${p.desc}</p><div class="detail-quote">"${p.name} — ${p.status} · ${p.year}"</div></div>`;
+
+            const dlHtml = p.download
+                ? `<div class="detail-section" style="border-top:1px solid rgba(212,175,55,0.15);padding-top:3rem;">
+                    <div class="detail-section-title">Descarga</div>
+                    <p class="detail-text" style="margin-bottom:1.5rem;">Haz clic para descargar ${p.name}.</p>
+                    <a href="${p.download}" target="_blank" rel="noopener"
+                        style="display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;text-decoration:none;transition:all .3s;"
+                        onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'"
+                        onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">
+                        ⬇ &nbsp;Descargar
+                    </a>
+                   </div>`
+                : `<div class="detail-section" style="border-top:1px solid rgba(212,175,55,0.15);padding-top:3rem;">
+                    <div class="detail-section-title">Descarga</div>
+                    <p class="detail-text" style="margin-bottom:1.5rem;">Próximamente disponible.</p>
+                    <span style="display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid rgba(212,175,55,.2);color:var(--text-dim);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;opacity:.5;">
+                        ⬇ &nbsp;Próximamente
+                    </span>
+                   </div>`;
+            document.getElementById('d-body').innerHTML += dlHtml;
+            showPage('detail');
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-view').classList.toggle('active', tab === 'view');
+            document.getElementById('tab-add').classList.toggle('active', tab === 'add');
+            document.getElementById('add-form-panel').style.display = tab === 'add' ? 'block' : 'none';
+            if (tab === 'view') renderProjects();
+            else {
+                document.getElementById('proj-grid').style.display = 'none';
+                document.getElementById('proj-empty').style.display = 'none';
+            }
+        }
+
+        async function addProject() {
+            const name = document.getElementById('f-name').value.trim();
+            const type = document.getElementById('f-type').value;
+            const desc = document.getElementById('f-desc').value.trim();
+            const longdesc = document.getElementById('f-longdesc').value.trim();
+            const status = document.getElementById('f-status').value;
+            const year = document.getElementById('f-year').value.trim() || '2026';
+            const tags = document.getElementById('f-tags').value.trim();
+            const download = document.getElementById('f-download').value.trim();
+            if (!name || !desc) { alert('Por favor completa nombre y descripción corta.'); return; }
+
+            const newProject = {
+                name: name.toUpperCase(), type, desc, longdesc,
+                status, year, tags, download, builtIn: false,
+                createdAt: new Date().toISOString()
+            };
+
+            const msg = document.getElementById('form-msg');
+
+            if (firestoreReady && db) {
+                // ── GUARDAR EN FIREBASE ──
+                try {
+                    const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+                    await addDoc(collection(db, "projects"), newProject);
+                    msg.textContent = '✓ "' + name.toUpperCase() + '" guardado en la nube ☁️';
+                } catch(e) {
+                    console.error(e);
+                    msg.textContent = '❌ Error al guardar. Revisa la consola.';
+                }
+            } else {
+                // ── GUARDAR LOCAL (sin Firebase configurado) ──
+                const newId = 'proj_' + Date.now();
+                projects.push({ ...newProject, id: newId });
+                msg.textContent = '✓ "' + name.toUpperCase() + '" agregado localmente (configura Firebase para persistencia)';
+                renderProjects();
+            }
+
+            ['f-name','f-desc','f-longdesc','f-year','f-tags','f-download'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 5000);
+            switchTab('view');
+        }
+
+        // Inicializar
+        initFirebase();
+
+        /* ═══════════════════════ CONTACT FORM ═══════════════════════ */
+        document.getElementById('cfSubmit').addEventListener('click', function () {
+            this.textContent = '✓ Mensaje Enviado'; this.style.background = '#1a5c1a'; this.disabled = true;
+            setTimeout(() => { this.textContent = 'Enviar Mensaje'; this.style.background = ''; this.disabled = false; }, 3000);
+        });
+    </script>
+</body>
+
+</html>
